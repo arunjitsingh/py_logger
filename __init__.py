@@ -1,5 +1,9 @@
 # Copyright 2012 Arunjit Singh. All Rights Reserved.
-"""File overview."""
+"""Colored logger for Python, using the logging module.
+
+The colored formatter is based on an answer on a stackoverflow thread.
+"http://bit.ly/TCG9P".
+"""
 
 __author__ = 'Arunjit Singh <arunjit@me.com>'
 
@@ -21,14 +25,21 @@ _COLORS = {
 
 
 class ColoredFormatter(logging.Formatter):
+  """The formatter for the logs. Does the actual coloring."""
 
   def __init__(self, msg):
     super(ColoredFormatter, self).__init__(msg)
     self.use_color = True
 
   def UseColor(self, use_color):
+    """Set whether the log should be colored.
+
+    Args:
+      use_color: (bool).
+    """
     self.use_color = use_color
 
+  # Overrides logging.Formatter.format
   def format(self, record):
     levelname = record.levelname
     if self.use_color and levelname in _COLORS:
@@ -57,17 +68,31 @@ class ColoredLogger(logging.Logger):
     self.ResetLogger()
 
   def SetFormat(self, fmt):
+    """Set the format.
+
+    Args:
+      fmt: (str) The format.
+    """
     self.format = fmt
     self.ResetLogger()
 
   def ResetLogger(self):
+    """Resets the logger's formatter and stream handler."""
     self._formatter = ColoredFormatter(self.format)
     self._console_handler = logging.StreamHandler()
     self._console_handler.setFormatter(self._formatter)
     self.addHandler(self._console_handler)
 
   def UseColor(self, use_color):
+    """Set whether the log should be colored.
+
+    Args:
+      use_color: (bool).
+    """
+    self.use_color = use_color
     self._formatter.UseColor(use_color)
 
 
+# A predefined basic logger.
+# pylint: disable-msg=C0103
 logger = ColoredLogger(fmt=ColoredLogger.LEVEL_ONLY_FORMAT)
