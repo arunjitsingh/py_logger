@@ -93,6 +93,13 @@ class ColoredLogger(logging.Logger):
     self._formatter.UseColor(use_color)
 
 
-# A predefined basic logger.
-# pylint: disable-msg=C0103
-logger = ColoredLogger(fmt=ColoredLogger.LEVEL_ONLY_FORMAT)
+LEVELS = [
+    logging.DEBUG,     # 0
+    logging.INFO,      # 1
+    logging.WARNING,   # 2
+    logging.ERROR,     # 3
+    logging.CRITICAL,  # 4
+    ]
+
+
+logging.setLoggerClass(ColoredLogger)
